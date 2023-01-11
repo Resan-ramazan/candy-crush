@@ -15,6 +15,25 @@ const candyColors = ["blue", "green", "orange", "purple", "red", "yellow"];
 const App = () => {
   const [currentColorArrangment, setCurrentColorArrangment] = useState([]);
 
+  const checkColumnOfFour = () => {
+    for (let i = 0; i <= 39; i++) {
+      const columnOfFour = [i, i + width, i + width * 2, i + width * 3];
+      const decidedColor = currentColorArrangment[i];
+      const isBlank = currentColorArrangment[i] === "";
+
+      if (
+        columnOfFour.every(
+          (square) =>
+            currentColorArrangment[square] === decidedColor && !isBlank
+        )
+      ) {
+        columnOfFour.forEach((square) => {
+          currentColorArrangment[square] = "";
+        });
+      }
+    }
+  };
+
   const checkForColumnOfThree = () => {
     for (let i = 0; i <= 47; i++) {
       const columnOfThree = [i, i + width, i + width * 2];
@@ -50,11 +69,12 @@ const App = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
+      checkColumnOfFour();
       checkForColumnOfThree();
       setCurrentColorArrangment([...currentColorArrangment]);
     }, 100);
     return () => clearInterval(timer); // This is the cleanup function
-  }, [checkForColumnOfThree, currentColorArrangment]);
+  }, [checkColumnOfFour, checkForColumnOfThree, currentColorArrangment]);
 
   return (
     <div className="app">
